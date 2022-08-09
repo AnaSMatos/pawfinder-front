@@ -1,0 +1,12 @@
+*{
+    /*colors*/
+	--color-yellow:#F59802;
+	--color-darkblue:#01266F;
+	--color-lightblue:#6484A3;
+	--color-lightyellow:#EFD39C;
+	--color-orange:#F56E11;
+
+    /*fonts*/
+    --font-title: "Pattaya";
+    --font-texts: "Raleway"
+}
