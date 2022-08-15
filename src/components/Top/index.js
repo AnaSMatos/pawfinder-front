@@ -53,6 +53,9 @@ const Topo = styled.div`
         font-size: 22px;
         color: white;
     }
+    @media (min-width: 1000px){
+        width: 800px;
+    }
 `
 
 const Sidebar = styled.div`

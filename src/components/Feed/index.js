@@ -11,6 +11,7 @@ export default function Feed(){
     const navigate = useNavigate()
     const [posts, setPosts] = useState([])
     
+    
     useEffect(()=>{
         const config = {
             headers: {
@@ -23,7 +24,11 @@ export default function Feed(){
             setPosts(res.data)
         })
         .catch(err=> {
-            console.log(err.response.data)
+            if(err.response.status === 401){
+                alert("Sua sessão expirou! Faça login novamente")
+                navigate("/")
+            }
+            console.log(err.response.status)
         })
     }, [page])
 
@@ -50,7 +55,7 @@ export default function Feed(){
             <PostsContainer>
                 {posts.map((post, index) => {
                     return(
-                        <Post key={index} name={post.animalName} age={post.animalAge} description={post.description} photo={post.image} country={post.country} region={post.region}></Post>
+                        <Post key={index} userId={post.userId} name={post.animalName} age={post.animalAge} description={post.description} image={post.image} country={post.country} region={post.region}></Post>
                     )
                 })}
             </PostsContainer>
@@ -63,22 +68,24 @@ const Container = styled.div`
     display: flex;
     align-items: center;
     flex-direction: column;
-    overflow: scroll;
 `
 
 
 const Options = styled.div`
     background-color: var(--color-yellow);
     margin-top: 65px;
-    width: 100vw;
+    width: 100%;
     height: 120px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    @media (min-width: 1000px){
+        width: 800px;
+    }
 `
 const NewPost = styled.button`
     margin-top: 10px;
-    width: 90vw;
+    width: 90%;
     height: 37px;
     background: #50AD24;
     border-radius: 13px;
@@ -88,10 +95,9 @@ const NewPost = styled.button`
     font-family: var(--font-title);
     color: white;
     font-size: 20px;
-
 `
 const AnimalTypes = styled.div`
-    width: 100vw;
+    width: 100%;
     display: flex;
     justify-content: space-evenly;
     margin-top: 12px;
@@ -99,7 +105,7 @@ const AnimalTypes = styled.div`
         background: #FFFFFF;
         border-radius: 12px;
         height: 50px;
-        width: 40vw;
+        width: 40%;
     }
     i{
         font-size: 23px;
@@ -108,7 +114,7 @@ const AnimalTypes = styled.div`
 
 const PostsContainer = styled.div`
     background-color: #F1ECEC;
-    width: 100vw;
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;

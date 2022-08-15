@@ -21,8 +21,9 @@ export default function SignUp(){
     function handleSubmit(e){
         e.preventDefault()
         setDisabled(true)
+
         const data = {
-            name, email, age: Number(age), password, country, region
+            name, email, age: Number(age), password, country, region, confirmPassword
         }
         console.log(data)
         const promise = axios.post("http://localhost:5000/sign-up", data)
@@ -33,6 +34,7 @@ export default function SignUp(){
         })
         .catch(err=>{
             console.log(err.response.data)
+            alert("As senhas não coincidem!")
             setDisabled(false)
         })
     }
@@ -50,6 +52,7 @@ export default function SignUp(){
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     disabled={disabled}
+                    required
                 ></input>
                 <input 
                     type="email" 
@@ -57,6 +60,7 @@ export default function SignUp(){
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     disabled={disabled}
+                    required
                 ></input>
                 <input 
                     type="number" 
@@ -64,17 +68,21 @@ export default function SignUp(){
                     value={age}
                     onChange={(e) => setAge(e.target.value)}
                     disabled={disabled}
+                    required
                 ></input>
                 <CountryDropdown 
                     value={country} 
                     onChange={(e) => setCountry(e)}
                     disabled={disabled}
-                    />
+                    required
+                />
                 <RegionDropdown
                     disableWhenEmpty
                     country={country} 
                     value={region}
-                    onChange={(e) => setRegion(e)}/>
+                    onChange={(e) => setRegion(e)}
+                    required
+                />
                 <input 
                     type="password" 
                     placeholder="Password"
@@ -82,12 +90,13 @@ export default function SignUp(){
                     onChange={(e) => setPassword(e.target.value)}
                     disabled={disabled}
                 ></input>
-                <input 
+                <input
                     type="password" 
                     placeholder="Confirm password"
                     value={confirmPassword}
                     onChange={(e) => setconfirmPassword(e.target.value)}
                     disabled={disabled}
+                    required
                 ></input>
                 <Button type="submit" disabled={disabled}>{disabled ? <LoadingHearts/> : "Confim"}</Button>
             </Form>

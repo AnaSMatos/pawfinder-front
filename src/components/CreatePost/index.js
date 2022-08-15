@@ -1,10 +1,13 @@
 import styled from "styled-components"
+import { useNavigate } from "react-router-dom";
 import Top from "../Top"
 import LoadingHearts from "../Layout/loaderSpinner";
 import { useState, useContext } from "react";
 import UserContext from "../../UserContext";
+import axios from "axios";
 
 export default function CreatePost(){
+    const navigate = useNavigate()
     const [animalName, setAnimalName] = useState("")
     const [animalType, setAnimalType] = useState("Dog")
     const [animalAge, setAnimalAge] = useState("")
@@ -17,7 +20,7 @@ export default function CreatePost(){
 
     function handleSubmit(e){
         e.preventDefault()
-
+        setDisabled(true)
         const config = {
             headers:{
                 Authorization: `Bearer ${token}`
@@ -27,11 +30,23 @@ export default function CreatePost(){
         const data = {
             animalName, animalType, animalAge: Number(animalAge), description, image
         }
+
+        const promise = axios.post("http://localhost:5000/create", data, config)
+        promise
+        .then((res) => {
+            navigate("/feed")
+        })
+        .catch((err) => {
+            console.log(err.response.data)
+            setDisabled(false)
+        })
     }
 
     return(
         <Container>
+            <div className="background-top"></div>
             <Top/>
+            <div className="background-content"></div>
             <Content>
                 <div>
                     <h1>Let's find a home to your pet!</h1>
@@ -43,6 +58,7 @@ export default function CreatePost(){
                         value={animalName}
                         onChange={(e) => setAnimalName(e.target.value)}
                         disabled={disabled}
+                        required
                     ></input>
                     <label>What's it's age?</label>
                     <input 
@@ -50,6 +66,7 @@ export default function CreatePost(){
                         value={animalAge}
                         onChange={(e) => setAnimalAge(e.target.value)}
                         disabled={disabled}
+                        required
                     ></input>
                     <label>Is it a dog or a cat?</label>
                     <select
@@ -75,6 +92,7 @@ export default function CreatePost(){
                         value={image}
                         onChange={(e) => setImage(e.target.value)}
                         disabled={disabled}
+                        required
                     ></input>
                     <label>Give a brief description of the pet:</label>
                     <textarea 
@@ -82,6 +100,7 @@ export default function CreatePost(){
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
                         disabled={disabled}
+                        required
                     />
                     <Button type="submit" disabled={disabled}>{disabled ? <LoadingHearts/> : "Confim"}</Button>
                 </form>
@@ -93,6 +112,23 @@ export default function CreatePost(){
 const Container = styled.div`
     width: 100vw;
     height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: hidden;
+    .background-top{
+        position: absolute;
+        width: 100%;
+        height: 66px;
+        background: var(--color-darkblue);
+    }
+    .background-content{
+        position: absolute;
+        top: 66px;
+        width: 100%;
+        height: 100%;
+        background: var(--color-yellow);
+    }
 `
 
 const Button = styled.button`
@@ -108,6 +144,17 @@ const Button = styled.button`
     color: var(--color-darkblue);
     font-weight: bold;
     margin: 10px 0;
+    @media (min-width: 600px){
+        font-size: 20px;
+        width: 180px;
+        height: 40px;
+    }
+    @media (min-width: 0px){
+        .loading{
+            position: relative;
+            bottom: 13px;
+        }
+    }
 `
 
 const Content = styled.div`
@@ -115,7 +162,10 @@ const Content = styled.div`
     background: var(--color-yellow);
     width: 100vw;
     height: 100vh;
-    top: 65px;
+    top: 66px;
+    @media (min-width: 600px){
+        width: 900px;
+    }
     form{
         margin-top: 15px;
         display: flex;
@@ -124,6 +174,9 @@ const Content = styled.div`
         label{
             font-family: var(--font-texts);
             font-size: 16px;
+            @media (min-width: 600px){
+                font-size: 20px;
+            }
         }
         input{
             outline: none;
@@ -137,6 +190,11 @@ const Content = styled.div`
             font-size: 15px;
             &::placeholder{
                 color: black;
+            }
+            @media (min-width: 600px){
+                width: 500px;
+                height: 60px;
+                font-size: 20px;
             }
     }
         select{
@@ -153,6 +211,11 @@ const Content = styled.div`
             &::placeholder{
                 color: black;
             }
+            @media (min-width: 600px){
+                width: 500px;
+                height: 60px;
+                font-size: 20px;
+            }
         }
         textarea{
             resize: none;
@@ -165,6 +228,11 @@ const Content = styled.div`
             font-size: 15px;
             font-family: var(--font-texts);
             margin-top: 5px;
+            @media (min-width: 600px){
+                width: 500px;
+                height: 150px;
+                font-size: 20px;
+            }
         }
     }
     div{
@@ -174,5 +242,9 @@ const Content = styled.div`
         justify-content: center;
         font-family: var(--font-title);
         font-size: 20px;
+        @media (min-width: 600px){
+            font-size: 30px;
+            margin-bottom: 15px;
+        }
     }
 `

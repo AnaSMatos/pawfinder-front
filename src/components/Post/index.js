@@ -1,12 +1,44 @@
 import styled from "styled-components"
-import puppy from "../../assets/puppy-bg.jpg"
-import { useNavigate } from "react-router-dom"
+import axios from "axios"
+import { useState, useContext } from "react";
+import UserContext from "../../UserContext";
+import LoadingHearts from "../Layout/loaderSpinner";
+
 
 export default function Post(props){
-    const navigate = useNavigate()
-    const {name, age, description, image, country, region} = props
+    const {name, age, description, image, country, region, userId} = props
+    const {token} = useContext(UserContext)
+    const [disabled, setDisabled] = useState(false)
+    const [recipientEmail, setRecipientEmail] = useState("")
+    const [confirm, setConfirm] = useState(false)
+
+    function adopt(){
+        setDisabled(true)
+        setConfirm(true)
+        const config = {
+            headers:{
+                Authorization: `Bearer ${token}`
+            }
+        }
+        const promise = axios.get(`http://localhost:5000/adopt/${userId}`, config)
+        promise
+        .then(res => {
+            setRecipientEmail(res.data)
+            setDisabled(false)
+        })
+        .catch(err => {
+            setDisabled(false)
+            alert(err.response.data)
+        })
+    }
+
     return(
         <Container>
+            <ConfirmAdoption className={confirm ? "open" : "closed"}>
+                <h1>Are you sure you want to adopt {name}?</h1>
+                <a href={`mailto:${recipientEmail}`}>Yes! Send email to the pets tutor</a>
+                <button onClick={()=>setConfirm(false)}>Cancel</button>
+            </ConfirmAdoption>
             <Picture>
                 <img src={image} alt="animal"></img>
             </Picture>
@@ -21,13 +53,74 @@ export default function Post(props){
                     <p>{description}</p>
                 </div>
             </Data>
-            <Adopt onClick={()=>alert("nice!")}>
-                <p>I'm interested!</p>
-                <i className="fa-solid fa-heart"></i>
+            <Adopt disabled={disabled} onClick={adopt}>
+                {disabled ? <LoadingHearts/> : 
+                    <>
+                        <p>I'm interested!</p>
+                        <i className="fa-solid fa-heart"></i>           
+                    </>
+                }
             </Adopt>
         </Container>
     )
 }
+
+const ConfirmAdoption = styled.div`
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    z-index: 100;
+    background-color: rgba(255,255,255,0.9);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    h1{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 300px;
+        height: 40px;
+        font-family: var(--font-title);
+        font-size: 20px;
+        background-color: white;
+        box-shadow: rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
+    }
+    a{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 300px;
+        height: 70px;
+        background-color: white;
+        font-family: var(--font-texts);
+        font-size: 15px;
+        margin-top: 20px;
+        box-shadow: rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
+        &:visited{
+            text-decoration: none;
+        }
+    }
+    button{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 300px;
+        height: 70px;
+        background-color: white;
+        font-family: var(--font-texts);
+        font-size: 15px;
+        margin-top: 20px;
+        box-shadow: rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
+    }
+    &.open{
+        transform: translateY(0);
+        transition: 0.7s ease;
+    }
+    &.closed{
+        transform: translateY(100vh);
+        transition: 0.7s ease;
+    }
+`
 
 const Adopt = styled.button`
     background: rgba(239, 211, 156, 0.8);
@@ -40,14 +133,21 @@ const Adopt = styled.button`
     display: flex;
     align-items: center;
     justify-content: space-around;
+    position: relative;
     i{
         color: red;
+    }
+    @media (min-width: 600px){
+        bottom: -40px;
+    }
+    @media (min-width: 1000px){
+        bottom: -40px;
     }
 `
 
 const Container = styled.div`
     background: white;
-    width: 95vw;
+    width: 94vw;
     height: 350px;
     margin: 12px 0;
     display: flex;
@@ -55,6 +155,14 @@ const Container = styled.div`
     align-items: center;
     box-sizing: border-box;
     box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+    @media (min-width: 600px){
+        width: 500px;
+        height: 400px;
+    }
+    @media (min-width: 1000px){
+        width: 800px;
+        height: 500px;
+    }
 `
 
 const Picture = styled.div`
@@ -65,6 +173,9 @@ const Picture = styled.div`
         width: 100%;
         height: 100%;
         object-fit: cover;
+    }
+    @media (min-width: 1000px){
+        height: 300px;
     }
 `
 
@@ -78,10 +189,16 @@ const Data = styled.div`
         h1{
             font-family: var(--font-title);
             font-size: 19px;
+            @media (min-width: 1000px){
+                font-size: 25px;
+            }
         }
         p{
             font-family: var(--font-texts);
             margin-left: 2px;
+            @media (min-width: 1000px){
+                font-size: 21px;
+            }
         }
     }
     .description{
@@ -92,6 +209,9 @@ const Data = styled.div`
         overflow-wrap: break-word;
         hyphens: auto;
         font-family: var(--font-texts);
+        @media (min-width: 1000px){
+            font-size: 20px;
+        }
     }
     .location{
         display: flex;
@@ -106,6 +226,9 @@ const Data = styled.div`
             font-family: var(--font-texts);
             font-size: 12px;
             margin-top: 2px;
+            @media (min-width: 1000px){
+                font-size: 17px;
+            }
         }
     }
 `
