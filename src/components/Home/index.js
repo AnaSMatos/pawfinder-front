@@ -1,33 +1,55 @@
 import styled from "styled-components"
 import image from "./../../assets/puppy.png"
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useState, useContext } from "react";
+import axios from "axios";
+import LoadingHearts from "../Layout/loaderSpinner";
+import UserContext from "../../UserContext";
 
 export default function SignIn(){
-    const [email, setEmail] = useState()
-    const [password, setPassword] = useState()
+    const navigate = useNavigate()
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
     const [disabled, setDisabled] = useState(false);
+    const {token, setToken} = useContext(UserContext)
 
     function handleSubmit(e){
         e.preventDefault()
         setDisabled(true)
-        alert("submitou :)")
+        const data = {email, password}
+        const promise = axios.post("http://localhost:5000/sign-in", data)
+        promise
+        .then(res=> {
+            setToken(res.data)
+            navigate("/feed")
+        })
+        .catch(err=>{
+            setDisabled(false)
+            console.log(err.response.data)
+        })
     }
+
     return(
         <Container> 
             <BottomBar>
                 <img src={image} alt="cute puppy"></img>
                 <h1>PawFinder</h1>
                 <InputBox onSubmit={handleSubmit}>
-                    <input 
+                    <input
+                        value={email}
                         type="email" 
                         placeholder="e-mail"
-                        onChange={(e) => setEmail(e)}></input>
+                        onChange={(e) => setEmail(e.target.value)}
+                        disabled={disabled}
+                        ></input>
                     <input 
+                        value={password}
                         type="password" 
                         placeholder="password"
-                        onChange={(e) => setPassword(e)}></input>
-                    <button type="submit" disabled={disabled}>LogIn</button>
+                        onChange={(e) => setPassword(e.target.value)}
+                        disabled={disabled}
+                        ></input>
+                    <button type="submit" disabled={disabled}>{disabled ? <LoadingHearts/> : "LogIn"}</button>
                 </InputBox>
                 <Link to="/sign-up">
                     <p>Create an account</p>
@@ -111,5 +133,8 @@ const InputBox = styled.form`
         border-radius: 5px;
         width: 80px;
         height: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 `

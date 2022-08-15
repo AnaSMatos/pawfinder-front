@@ -1,17 +1,40 @@
 import styled from "styled-components"
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
+import axios from "axios";
+import LoadingHearts from "../Layout/loaderSpinner";
+import dotenv from "dotenv";
+dotenv.config();
 
 export default function SignUp(){
-    const [country, setCountry] = useState()
-    const [region, setRegion] = useState()
+    const navigate = useNavigate()
+    const [name, setName] = useState("")
+    const [email, setEmail] = useState("")
+    const [age, setAge] = useState("")
+    const [password, setPassword] = useState("")
+    const [confirmPassword, setconfirmPassword] = useState("")
+    const [country, setCountry] = useState("")
+    const [region, setRegion] = useState("")
     const [disabled, setDisabled] = useState(false);
 
     function handleSubmit(e){
         e.preventDefault()
         setDisabled(true)
-        alert("submitou :)")
+        const data = {
+            name, email, age: Number(age), password, country, region
+        }
+        console.log(data)
+        const promise = axios.post("http://localhost:5000/sign-up", data)
+        promise
+        .then(res=>{
+            console.log(res.data)
+            navigate("/")
+        })
+        .catch(err=>{
+            console.log(err.response.data)
+            setDisabled(false)
+        })
     }
 
     return(
@@ -21,19 +44,52 @@ export default function SignUp(){
             </Title>
             <h1>Tell us more about you...</h1>
             <Form onSubmit={handleSubmit}>
-                <input placeholder="Name"></input>
-                <input type="email" placeholder="E-mail"></input>
-                <input type="number" placeholder="Age"></input>
+                <input
+                    type="text"
+                    placeholder="Name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    disabled={disabled}
+                ></input>
+                <input 
+                    type="email" 
+                    placeholder="E-mail"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    disabled={disabled}
+                ></input>
+                <input 
+                    type="number" 
+                    placeholder="Age"
+                    value={age}
+                    onChange={(e) => setAge(e.target.value)}
+                    disabled={disabled}
+                ></input>
                 <CountryDropdown 
                     value={country} 
-                    onChange={(e) => setCountry(e)}/>
+                    onChange={(e) => setCountry(e)}
+                    disabled={disabled}
+                    />
                 <RegionDropdown
+                    disableWhenEmpty
                     country={country} 
                     value={region}
                     onChange={(e) => setRegion(e)}/>
-                <input type="password" placeholder="Password"></input>
-                <input type="password" placeholder="Confirm password"></input>
-                <Button type="submit" disabled={disabled}>Confirm</Button>
+                <input 
+                    type="password" 
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    disabled={disabled}
+                ></input>
+                <input 
+                    type="password" 
+                    placeholder="Confirm password"
+                    value={confirmPassword}
+                    onChange={(e) => setconfirmPassword(e.target.value)}
+                    disabled={disabled}
+                ></input>
+                <Button type="submit" disabled={disabled}>{disabled ? <LoadingHearts/> : "Confim"}</Button>
             </Form>
             <Link to="/"><p>Voltar</p></Link>
         </Container>
@@ -115,6 +171,7 @@ const Form = styled.form`
         font-size: 15px;
     }
     input{
+        outline: none;
         border-radius: 5px;
         padding: 5px;
         box-sizing: border-box;
