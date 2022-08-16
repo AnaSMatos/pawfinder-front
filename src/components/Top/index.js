@@ -16,9 +16,6 @@ export default function Top(){
                     }}><i className="fa-solid fa-paw"></i></button>
                     <button className="profile" onClick={()=>setSidebar(!sidebar)}><i className="fa-solid fa-user"></i></button>
                 </Topo>
-                <Sidebar className={sidebar ? "open" : "closed"}>
-                    <button onClick={()=>navigate("/")}>VOLTAR PARA A TELA DE LOGIN nd hopefully log u out thank god</button>
-                </Sidebar>
             </>
     )
 }
@@ -55,23 +52,5 @@ const Topo = styled.div`
     }
     @media (min-width: 1000px){
         width: 800px;
-    }
-`
-
-const Sidebar = styled.div`
-    position: absolute;
-    z-index: 1;
-    width: 100vw;
-    height: 120px;
-    top: 65px;
-    right: 0;
-    background-color: rgba(100, 132, 163, 1);
-    &.open{
-        transform: translateY(0);
-        transition: 0.7s ease;
-    }
-    &.closed{
-        transform: translateY(-100vh);
-        transition: 0.7s ease;
     }
 `
