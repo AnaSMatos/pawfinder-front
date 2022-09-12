@@ -2,8 +2,7 @@ import styled from "styled-components"
 import { useNavigate } from "react-router-dom";
 import Top from "../Top"
 import LoadingHearts from "../Layout/loaderSpinner";
-import { useState, useContext } from "react";
-import UserContext from "../../UserContext";
+import { useEffect, useState } from "react";
 import axios from "axios";
 
 export default function CreatePost(){
@@ -15,8 +14,14 @@ export default function CreatePost(){
     const [description, setDescription] = useState("")
     const [image, setImage] = useState("")
     const [disabled, setDisabled] = useState(false);
-    const {token} = useContext(UserContext)
+    const token = localStorage.getItem("token")
 
+    useEffect(() => {
+        if(!token){
+            alert("Sua sessão expirou! Faça login novamente")
+            navigate("/")
+        }
+    }, [token])
 
     function handleSubmit(e){
         e.preventDefault()
@@ -37,6 +42,10 @@ export default function CreatePost(){
             navigate("/feed")
         })
         .catch((err) => {
+            if(err.response.status === 401){
+                alert("Sua sessão expirou! Faça login novamente")
+                navigate("/")
+            }
             console.log(err.response.data)
             setDisabled(false)
         })

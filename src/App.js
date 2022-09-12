@@ -11,10 +11,10 @@ import "./assets/index.css"
 
 
 function App() {
-    const [token, setToken] = useState("")
     const [page, setPage] = useState("")
+
     return (
-        <UserContext.Provider value={{token, setToken, page, setPage}}>
+        <UserContext.Provider value={{page, setPage}}>
             <BrowserRouter>
                 <Routes>
                     <Route path="/" element={<SignIn />} />

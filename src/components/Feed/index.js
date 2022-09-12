@@ -1,13 +1,14 @@
 import styled from "styled-components"
 import { useEffect, useState, useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Post from "../Post";
 import Top from "../Top";
 import UserContext from "../../UserContext";
 
 export default function Feed(){
-    const {token, page, setPage} = useContext(UserContext)
+    const {page, setPage} = useContext(UserContext)
+    const token = localStorage.getItem("token")
     const navigate = useNavigate()
     const [posts, setPosts] = useState([])
     
@@ -95,6 +96,7 @@ const NewPost = styled.button`
     font-family: var(--font-title);
     color: white;
     font-size: 20px;
+    cursor: pointer;
 `
 const AnimalTypes = styled.div`
     width: 100%;
@@ -106,6 +108,7 @@ const AnimalTypes = styled.div`
         border-radius: 12px;
         height: 50px;
         width: 40%;
+        cursor: pointer;
     }
     i{
         font-size: 23px;

@@ -1,26 +1,31 @@
 import styled from "styled-components"
 import image from "./../../assets/puppy.png"
 import { Link, useNavigate } from "react-router-dom";
-import { useState, useContext } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import LoadingHearts from "../Layout/loaderSpinner";
-import UserContext from "../../UserContext";
 
 export default function SignIn(){
     const navigate = useNavigate()
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [disabled, setDisabled] = useState(false);
-    const {token, setToken} = useContext(UserContext)
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if(token){
+            navigate("/feed")
+        }
+    }, [])
 
     function handleSubmit(e){
         e.preventDefault()
         setDisabled(true)
         const data = {email, password}
-        const promise = axios.post("https://paw-finder-back.herokuapp.com/sign-in", data)
+        const promise = axios.post("http://localhost:5000/sign-in", data)
         promise
         .then(res=> {
-            setToken(res.data)
+            localStorage.setItem("token", res.data)
             navigate("/feed")
         })
         .catch(err=>{
@@ -41,6 +46,7 @@ export default function SignIn(){
                         placeholder="e-mail"
                         onChange={(e) => setEmail(e.target.value)}
                         disabled={disabled}
+                        autoFocus
                         ></input>
                     <input 
                         value={password}

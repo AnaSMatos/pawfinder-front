@@ -1,16 +1,17 @@
 import styled from "styled-components"
 import axios from "axios"
-import { useState, useContext } from "react";
-import UserContext from "../../UserContext";
+import { useState } from "react";
 import LoadingHearts from "../Layout/loaderSpinner";
+import { useNavigate } from "react-router-dom";
 
 
 export default function Post(props){
     const {name, age, description, image, country, region, userId} = props
-    const {token} = useContext(UserContext)
+    const token = localStorage.getItem("token")
     const [disabled, setDisabled] = useState(false)
     const [recipientEmail, setRecipientEmail] = useState("")
     const [confirm, setConfirm] = useState(false)
+    const navigate = useNavigate()
 
     function adopt(){
         setDisabled(true)
@@ -28,6 +29,10 @@ export default function Post(props){
         })
         .catch(err => {
             setDisabled(false)
+            if(err.response.status === 401){
+                alert("Sua sessão expirou! Faça login novamente")
+                navigate("/")
+            }
             alert(err.response.data)
         })
     }
@@ -67,14 +72,23 @@ export default function Post(props){
 
 const ConfirmAdoption = styled.div`
     width: 100vw;
-    height: 100vh;
+    height: 350px;
     position: absolute;
     z-index: 100;
     background-color: rgba(255,255,255,0.9);
     display: flex;
     flex-direction: column;
     align-items: center;
+    @media (min-width: 600px){
+        width: 500px;
+        height: 400px;
+    }
+    @media (min-width: 1000px){
+        width: 800px;
+        height: 500px;
+    }
     h1{
+        margin-top: 20px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -113,21 +127,24 @@ const ConfirmAdoption = styled.div`
         box-shadow: rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
     }
     &.open{
-        transform: translateY(0);
-        transition: 0.7s ease;
+        visibility: visible;
+        opacity: 1;
+        transition: visibility 0s, opacity 0.2s ease-in;
     }
     &.closed{
-        transform: translateY(100vh);
-        transition: 0.7s ease;
+        visibility: hidden;
+        opacity: 0;
+        transition: visibility 0s, opacity 0.2s ease-in;
     }
 `
 
 const Adopt = styled.button`
-    background: rgba(239, 211, 156, 0.8);
+    background: white;
+    border: 2px solid rgb(239, 211, 156);
+    border-radius: 30px;
     width: 125px;
-    height: 20px;
+    height: 24px;
     font-family: var(--font-texts);
-    box-shadow: rgba(239, 211, 156, 0.5) 4px 4px, rgba(239, 211, 156, 0.4) 8px 8px;
     font-weight: 600;
     color: var(--color-yellow);
     display: flex;
@@ -136,12 +153,16 @@ const Adopt = styled.button`
     position: relative;
     i{
         color: red;
+        margin-left: 3px;
     }
     @media (min-width: 600px){
         bottom: -40px;
     }
     @media (min-width: 1000px){
         bottom: -40px;
+    }
+    &:hover{
+        background-color: rgba(239, 211, 156, 0.8);
     }
 `
 
@@ -202,9 +223,8 @@ const Data = styled.div`
         }
     }
     .description{
-        /*cabe 186 caracteres pelo jeito, vou limitar pra 180*/
         margin-top: 5px;
-        height: 70px;
+        height: 65px;
         text-align: justify;
         overflow-wrap: break-word;
         hyphens: auto;
