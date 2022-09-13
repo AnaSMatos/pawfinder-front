@@ -17,7 +17,7 @@ export default function Top(){
                     <button className="profile" onClick={()=>setSidebar(!sidebar)}><i className="fa-solid fa-user"></i></button>
                 </Topo>
                 <Sidebar className={sidebar ? "open" : "closed"}>
-                    <Option>
+                    <Option onClick={()=>navigate("/applications")}>
                         <i className="fa-solid fa-list"></i>
                         <p>Applications</p>
                     </Option>
@@ -101,6 +101,10 @@ const Option = styled.button`
     box-sizing: border-box;
     background: white;
     font-size: 15.2px;
+    cursor: pointer;
+    &:hover{
+        background-color: #ededed;
+    }
     i{
         margin-right: 7px;
     }

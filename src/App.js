@@ -5,6 +5,7 @@ import SignIn from "./components/Home/"
 import SignUp from "./components/SignUp/"
 import Feed from "./components/Feed/";
 import CreatePost from "./components/CreatePost";
+import Applications from "./components/Applications";
 
 import "./assets/reset.css"
 import "./assets/index.css"
@@ -21,6 +22,7 @@ function App() {
                     <Route path="/sign-up" element={<SignUp />} />
                     <Route path="/feed" element={<Feed/>}/>
                     <Route path="/create" element={<CreatePost/>}/>
+                    <Route path="/applications" element={<Applications/>}/>
                 </Routes>
             </BrowserRouter>
         </UserContext.Provider>
