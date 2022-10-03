@@ -7,6 +7,7 @@ import LoadingHearts from "../Layout/loaderSpinner";
 import dotenv from "dotenv";
 dotenv.config();
 
+
 export default function SignUp(){
     const navigate = useNavigate()
     const [name, setName] = useState("")
@@ -25,8 +26,8 @@ export default function SignUp(){
         const data = {
             name, email, age: Number(age), password, country, region, confirmPassword
         }
-        console.log(data)
-        const promise = axios.post(`${process.env.SERVER_URL}/sign-up`, data)
+
+        const promise = axios.post(`${process.env.REACT_APP_URL}/sign-up`, data)
         promise
         .then(res=>{
             navigate("/")

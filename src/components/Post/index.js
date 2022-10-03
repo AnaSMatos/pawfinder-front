@@ -22,7 +22,7 @@ export default function Post(props){
                 Authorization: `Bearer ${token}`
             }
         }
-        const promise = axios.get(`${process.env.SERVER_URL}/adopt/${userId}`, config)
+        const promise = axios.get(`${process.env.REACT_APP_URL}/adopt/${userId}`, config)
         promise
         .then(res => {
             setRecipientEmail(res.data)

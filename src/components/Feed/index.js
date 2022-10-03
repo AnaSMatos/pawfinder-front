@@ -21,7 +21,7 @@ export default function Feed(){
                 Authorization: `Bearer ${token}`
             }
         }
-        const promise = axios.get(`${process.env.SERVER_URL}/feed${page}`, config)
+        const promise = axios.get(`${process.env.REACT_APP_URL}/feed${page}`, config)
         promise
         .then(res => {
             setPosts(res.data)

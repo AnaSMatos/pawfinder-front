@@ -24,7 +24,7 @@ export default function SignIn(){
         e.preventDefault()
         setDisabled(true)
         const data = {email, password}
-        const promise = axios.post(process.env.SERVER_URL, data)
+        const promise = axios.post(`${process.env.REACT_APP_URL}/sign-in`, data)
         promise
         .then(res=> {
             localStorage.setItem("token", res.data)

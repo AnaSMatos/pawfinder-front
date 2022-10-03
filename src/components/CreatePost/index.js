@@ -38,7 +38,7 @@ export default function CreatePost(){
             animalName, animalType, animalAge: Number(animalAge), description, image
         }
 
-        const promise = axios.post(`${process.env.SERVER_URL}/create`, data, config)
+        const promise = axios.post(`${process.env.REACT_APP_URL}/create`, data, config)
         promise
         .then((res) => {
             navigate("/feed")
