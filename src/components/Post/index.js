@@ -3,7 +3,8 @@ import axios from "axios"
 import { useState } from "react";
 import LoadingHearts from "../Layout/loaderSpinner";
 import { useNavigate } from "react-router-dom";
-
+import dotenv from "dotenv";
+dotenv.config();
 
 export default function Post(props){
     const {name, age, description, image, country, region, userId} = props
@@ -21,7 +22,7 @@ export default function Post(props){
                 Authorization: `Bearer ${token}`
             }
         }
-        const promise = axios.get(`http://localhost:5000/adopt/${userId}`, config)
+        const promise = axios.get(`${process.env.SERVER_URL}/adopt/${userId}`, config)
         promise
         .then(res => {
             setRecipientEmail(res.data)

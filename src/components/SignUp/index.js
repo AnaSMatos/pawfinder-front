@@ -26,10 +26,9 @@ export default function SignUp(){
             name, email, age: Number(age), password, country, region, confirmPassword
         }
         console.log(data)
-        const promise = axios.post("https://paw-finder-back.herokuapp.com/sign-up", data)
+        const promise = axios.post(`${process.env.SERVER_URL}/sign-up`, data)
         promise
         .then(res=>{
-            console.log(res.data)
             navigate("/")
         })
         .catch(err=>{

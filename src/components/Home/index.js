@@ -4,6 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import LoadingHearts from "../Layout/loaderSpinner";
+import dotenv from "dotenv";
+dotenv.config();
 
 export default function SignIn(){
     const navigate = useNavigate()
@@ -22,7 +24,7 @@ export default function SignIn(){
         e.preventDefault()
         setDisabled(true)
         const data = {email, password}
-        const promise = axios.post("http://localhost:5000/sign-in", data)
+        const promise = axios.post(process.env.SERVER_URL, data)
         promise
         .then(res=> {
             localStorage.setItem("token", res.data)

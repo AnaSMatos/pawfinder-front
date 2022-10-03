@@ -5,6 +5,8 @@ import axios from "axios";
 import Post from "../Post";
 import Top from "../Top";
 import UserContext from "../../UserContext";
+import dotenv from "dotenv";
+dotenv.config();
 
 export default function Feed(){
     const {page, setPage} = useContext(UserContext)
@@ -19,7 +21,7 @@ export default function Feed(){
                 Authorization: `Bearer ${token}`
             }
         }
-        const promise = axios.get(`http://localhost:5000/feed${page}`, config)
+        const promise = axios.get(`${process.env.SERVER_URL}/feed${page}`, config)
         promise
         .then(res => {
             setPosts(res.data)

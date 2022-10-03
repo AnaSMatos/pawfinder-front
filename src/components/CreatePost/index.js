@@ -4,6 +4,8 @@ import Top from "../Top"
 import LoadingHearts from "../Layout/loaderSpinner";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import dotenv from "dotenv";
+dotenv.config();
 
 export default function CreatePost(){
     const navigate = useNavigate()
@@ -36,7 +38,7 @@ export default function CreatePost(){
             animalName, animalType, animalAge: Number(animalAge), description, image
         }
 
-        const promise = axios.post("http://localhost:5000/create", data, config)
+        const promise = axios.post(`${process.env.SERVER_URL}/create`, data, config)
         promise
         .then((res) => {
             navigate("/feed")
