@@ -18,10 +18,10 @@ Working on PawFinder has been an immensely gratifying experience, bringing toget
 
 While the project is currently not live, here are some snapshots to provide a glimpse of the user interface:
 
-![PawFinder Screenshot 1](https://postimg.cc/rd89tdgR)
+![PawFinder Screenshot 1](https://i.postimg.cc/mr9pJCHj/pawfinder2.png)
 *Login page*
 
-![PawFinder Screenshot 2]([url-to-image-2](https://postimg.cc/Wdmn3mmP))
+![PawFinder Screenshot 2](https://i.postimg.cc/2SMX02V3/pawfinder1.png)
 *Feed*
 
 I hope to bring PawFinder back to life in the future <3
